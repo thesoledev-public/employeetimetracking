@@ -19,25 +19,34 @@ const requireRoleWithinCompany = (allowedRoles) => async (req, res, next) => {
             }
         }
 
-        const loggedUser = await User.findById(decoded.userId);
-        if (!loggedUser) {
-            return res.status(403).json({ message: "Access denied. Invalid user." });
+        const user = await User.findById(decoded.userId);
+        if (!user) {
+            return res.status(403).json({ message: "Access denied. User not found." });
         }
 
-        // Check if the logged-in user is an administrator
-        if (loggedUser.role === 'Administrator') {
-            req.user = loggedUser;
+        // Allow Superuser role to access everything
+        if (user.role === 'Superuser') {
+            req.user = user;
             return next();
         }
 
-        // Check if the provided userId matches the logged-in user or is in the same company
-        const userId = req.params.userId;
-        if (userId === loggedUser._id.toString() || loggedUser.companyProfile.equals(userId)) {
-            req.user = loggedUser;
-            return next();
-        } else {
+        if (!allowedRoles.includes(user.role)) {
             return res.status(403).json({ message: "Access denied. Insufficient permissions." });
         }
+
+        // Further permission checks for 'Subscriber' role
+        if (user.role === 'Subscriber') {
+            
+            // If checking own profile, proceed
+            if (req.params.userId === user._id.toString()) {
+                req.user = user;
+                return next();
+            }
+ 
+        }
+
+        req.user = user;
+        next();
     } catch (error) {
         console.error(error);
         return res.status(500).json({ message: "Server error during authentication." });
@@ -45,5 +54,3 @@ const requireRoleWithinCompany = (allowedRoles) => async (req, res, next) => {
 };
 
 module.exports = requireRoleWithinCompany;
-
-

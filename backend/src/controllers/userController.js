@@ -1,5 +1,5 @@
 const User = require('../models/User');
-const CompanyProfile = require('../models/CompanyProfile');
+const Company = require('../models/Company');
 
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
@@ -22,8 +22,8 @@ exports.addEmployee = async (req, res) => {
 
   try {
     // Find the company profile corresponding to the companyId
-    const companyProfile = await CompanyProfile.findById(companyId);
-    if (!companyProfile) {
+    const company = await Company.findById(companyId);
+    if (!company) {
       return res.status(404).json({ error: 'Company profile not found.' });
     }
 
@@ -33,7 +33,7 @@ exports.addEmployee = async (req, res) => {
       email,
       password,
       role,
-      companyProfile: companyProfile._id, // Link the user to the company profile
+      companyId: company._id, // Link the user to the company profile
     });
 
     // Hash password before saving
@@ -55,7 +55,7 @@ exports.getAllUsers = async (req, res) => {
     let usersQuery = User.find({})
       .limit(limit * 1)
       .skip((page - 1) * limit)
-      .populate('companyProfile');
+      .populate('companyId');
    
 
     const users = await usersQuery.exec();
@@ -74,7 +74,7 @@ exports.getAllUsers = async (req, res) => {
 
 exports.getCurrentUserProfile = async (req, res) => {
   try {
-      const userProfile = await User.findById(req.user.id).populate('companyProfile');
+      const userProfile = await User.findById(req.user.id).populate('companyId');
       if (!userProfile) {
           return res.status(404).json({ message: "User profile not found" });
       }
@@ -88,7 +88,7 @@ exports.getCurrentUserProfile = async (req, res) => {
 exports.getUserProfileById = async (req, res) => {
   const userId = req.params.userId;
   try {
-      const userProfile = await User.findById(userId).populate('companyProfile');
+      const userProfile = await User.findById(userId).populate('companyId');
       if (!userProfile) {
           return res.status(404).json({ message: "User profile not found" });
       }

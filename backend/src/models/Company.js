@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 
-const companyProfileSchema = new mongoose.Schema({
+const companySchema = new mongoose.Schema({
   name: {
     type: String,
     required: true,
@@ -12,7 +12,11 @@ const companyProfileSchema = new mongoose.Schema({
   },
   industry: {
     type: String,
-    required: true,
+    required: true
+  },
+  size: {
+    type: Number,
+    required: true
   },
   location: {
     address: String,
@@ -34,15 +38,15 @@ const companyProfileSchema = new mongoose.Schema({
     type: String,
     required: false,
   },
-  userId: { // Link to the User who owns this profile
+  ownerUID: { // Link to the User who owns this profile
     type: mongoose.Schema.Types.ObjectId,
     ref: 'User',
     required: true,
-    unique: true, // Ensure one-to-one relationship between User and CompanyProfile
+    unique: true, // Ensure one-to-one relationship between User and Company
   },
   // Additional fields as needed...
 }, { timestamps: true }); // Include creation and update timestamps
 
-const CompanyProfile = mongoose.model('CompanyProfile', companyProfileSchema);
+const Company = mongoose.model('Company', companySchema);
 
-module.exports = CompanyProfile;
+module.exports = Company;

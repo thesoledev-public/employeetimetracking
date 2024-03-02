@@ -1,25 +1,25 @@
-const CompanyProfile = require('../models/CompanyProfile'); // Adjust the path as necessary
+const Company = require('../models/Company'); // Adjust the path as necessary
 const User = require('../models/User'); // Adjust the path as necessary
 
 // Function to add a company profile
-exports.addCompanyProfile = async (req, res) => {
+exports.addCompany = async (req, res) => {
   const { userId, ...profileData } = req.body;
 
   try {
     // Check if the user already has a company profile
-    const existingProfile = await CompanyProfile.findOne({ userId });
+    const existingProfile = await Company.findOne({ userId });
     if (existingProfile) {
       return res.status(400).json({ message: 'User already has a company profile.' });
     }
 
     // Create new company profile
-    const companyProfile = new CompanyProfile({ ...profileData, userId });
-    await companyProfile.save();
+    const company = new Company({ ...profileData, userId });
+    await company.save();
 
     // Optionally, update the user to indicate they now have a company profile
-    await User.findByIdAndUpdate(userId, { $set: { companyProfile: companyProfile._id } });
+    await User.findByIdAndUpdate(userId, { $set: { company: company._id } });
 
-    res.json({ message: 'Company profile added successfully.', companyProfile });
+    res.json({ message: 'Company profile added successfully.', company });
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: 'Error adding company profile.' });

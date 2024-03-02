@@ -7,7 +7,7 @@ const connectDB = require('./src/config/database');
 // Import routes
 const userRoutes = require('./src/routes/userRoutes');
 const authRoutes = require('./src/routes/authRoutes'); // Import the new authRoutes
-const companyProfileRoutes = require('./src/routes/companyProfileRoutes'); // Adjust the path as necessary
+const companyRoutes = require('./src/routes/companyRoutes'); // Adjust the path as necessary
 
 
 const setupMiddleware = require('./src/middlewares/middleware'); // Import the setupMiddleware function from the middleware folder
@@ -25,7 +25,7 @@ app.get('/', (req, res) => {
 
 app.use('/api/users', userRoutes);
 app.use('/api/auth', authRoutes);
-app.use('/api', companyProfileRoutes);
+app.use('/api', companyRoutes);
 
 // Connect to MongoDB, then start the server
 connectDB().then(() => {
