@@ -4,7 +4,7 @@ import React from 'react';
 const LoginForm = ({ email, setEmail, password, setPassword, handleSubmit, errorMessage, onForgotPassword }) => {
   return (
     <form onSubmit={handleSubmit} className="w-full max-w-xs">
-      {errorMessage && <div className="mb-3 text-red-500">{errorMessage}</div>}
+      {errorMessage && <div className="font-regular relative block w-full rounded-lg bg-rose-500 p-3 mb-3 text-sm leading-5 text-white opacity-100">{errorMessage}</div>}
       <div className="mb-6">
         <label htmlFor="email" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Email Address</label>
         <input
@@ -34,7 +34,7 @@ const LoginForm = ({ email, setEmail, password, setPassword, handleSubmit, error
           type="button">Forgot Password?</button>
       </div>
       <div className="flex items-center justify-between">
-        <button type="submit" className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+        <button type="submit" className="w-full flex justify-center py-3 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-sky-600 hover:bg-sky-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
           Sign In
         </button>
       </div>

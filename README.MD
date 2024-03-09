@@ -13,8 +13,14 @@ This is my Folder and File Structure
 
 employeeTimeTracking/
 │
+├── assets/
+│   ├── images/
+│   └── styles/
+│
 ├── src/
 │   ├── components/          # Shared UI components
+│   │   ├── ProtectedRoute.js
+│   │   └──PublicRoute.js
 │   │
 │   ├── features/
 │   │   ├── auth/

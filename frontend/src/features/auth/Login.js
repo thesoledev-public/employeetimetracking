@@ -1,19 +1,18 @@
 // src/features/auth/Login.js
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useAuth } from '../../contexts/AuthContext';
 import LoginForm from './components/LoginForm';
 import ForgotPasswordForm from './components/ForgotPasswordForm'; // Make sure this is imported
-import useLogin from './hooks/useLogin';
 
 function Login() {
   const navigate = useNavigate();
-  const apiUrl = process.env.REACT_APP_API_URL;
-  const { email, setEmail, password, setPassword, errorMessage, handleLogin } = useLogin();
+  const { email, setEmail, password, setPassword, errorMessage, handleLogin } = useAuth();
   const [isForgotPassword, setIsForgotPassword] = useState(false); // State to toggle forms
 
   const handleSubmit = (event) => {
     event.preventDefault();
-    handleLogin(navigate, apiUrl);
+    handleLogin(navigate);
   };
 
   const handleForgotPassword = () => {
@@ -26,8 +25,13 @@ function Login() {
 
   return (
     <div className="min-h-screen flex items-center justify-center w-full dark:bg-gray-950">
-      <div className="bg-white dark:bg-gray-900 shadow-md rounded-lg px-8 py-6 max-w-md">
-        <h1 className="text-2xl font-bold text-center mb-4 dark:text-gray-200">
+      <div className="bg-white dark:bg-gray-900 shadow-md rounded-lg px-8 py-6 min-w-80">
+        <img
+            src={'/assets/images/logo-icon.png'}
+            className="cursor-pointer mb-5 mx-auto"
+            alt="Logo"
+        />        
+        <h1 className="text-2xl font-bold text-center mb-5 dark:text-gray-200">
           {isForgotPassword ? 'Reset Password' : 'Welcome Back!'}
         </h1>
         {isForgotPassword ? (

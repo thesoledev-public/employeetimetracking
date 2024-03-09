@@ -5,6 +5,8 @@ import Login from './features/auth/Login';
 import Logout from './features/auth/Logout';
 import Dashboard from './features/dashboard/Dashboard';
 import ProtectedRoute from './components/ProtectedRoute'; // Import the ProtectedRoute component
+import { AuthProvider } from './contexts/AuthContext';
+import { UserProvider } from './contexts/UserContext';
 
 
 // Example authentication check function
@@ -27,18 +29,22 @@ function App() {
 
   return (
     <div>
-      <Routes>
-        <Route path="/" element={isAuthenticated() ? <Navigate to="/dashboard" /> : <Navigate to="/login" />} />
-        <Route path="/login" element={<Login />} />
-        <Route path="/logout" element={<Logout />} />      
+      <AuthProvider>
+      <UserProvider>
+        <Routes>
+          <Route path="/" element={isAuthenticated() ? <Navigate to="/dashboard" /> : <Navigate to="/login" />} />
+          <Route path="/login" element={<Login />} />
+          <Route path="/logout" element={<Logout />} />      
 
-        <Route path="/dashboard" element={
-          <ProtectedRoute>
-            <Dashboard />
-          </ProtectedRoute>
-        } />
+          <Route path="/dashboard" element={
+            <ProtectedRoute>
+              <Dashboard />
+            </ProtectedRoute>
+          } />
 
-      </Routes>
+        </Routes>
+      </UserProvider>
+      </AuthProvider>
     </div>
   );
 }

@@ -2,31 +2,31 @@
 import { useState, useEffect } from 'react';
 
 const useDashboardData = () => {
-  const [userData, setUserData] = useState(null);
+  // const [userData, setUserData] = useState(null);
 
-  useEffect(() => {
-    const fetchData = async () => {
-      const apiUrl = process.env.REACT_APP_API_URL;
-      const response = await fetch(`${apiUrl}/users/profile`, {
-        method: 'GET',
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem('token')}`,
-        },
-      });
+  // useEffect(() => {
+  //   const fetchData = async () => {
+  //     const apiUrl = process.env.REACT_APP_API_URL;
+  //     const response = await fetch(`${apiUrl}/users/profile`, {
+  //       method: 'GET',
+  //       headers: {
+  //         Authorization: `Bearer ${localStorage.getItem('token')}`,
+  //       },
+  //     });
 
-      if (response.ok) {
-        const data = await response.json();
-        console.log(data);
-        setUserData(data);
-      } else {
-        console.error('Failed to fetch user data:', response.status);
-      }
-    };
+  //     if (response.ok) {
+  //       const data = await response.json();
+  //       console.log(data);
+  //       setUserData(data);
+  //     } else {
+  //       console.error('Failed to fetch user data:', response.status);
+  //     }
+  //   };
 
-    fetchData();
-  }, []);
+  //   fetchData();
+  // }, []);
 
-  return { userData };
+  // return { userData };
 };
 
 export default useDashboardData;

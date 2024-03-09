@@ -1,45 +1,60 @@
 // src/contexts/AuthContext.js
-import React, { createContext, useContext, useState } from 'react';
+import React, { createContext, useContext, useState, useEffect } from 'react';
 
 const AuthContext = createContext();
 
 export const useAuth = () => useContext(AuthContext);
 
 export const AuthProvider = ({ children }) => {
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [errorMessage, setErrorMessage] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
+  const [isLoggedIn, setIsLoggedIn] = useState(!!localStorage.getItem('token'));
+  const apiUrl = process.env.REACT_APP_API_URL;
 
-  const login = async (email, password, apiUrl) => {
+  useEffect(() => {
+    // This effect keeps isLoggedIn state in sync with the presence of the token
+    const token = localStorage.getItem('token');
+    setIsLoggedIn(!!token);
+  }, []);
+
+  const handleLogin = async (navigate) => {
+    setErrorMessage('');
+    setIsLoading(true);
     try {
       const response = await fetch(`${apiUrl}/auth/login`, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: {
+          'Content-Type': 'application/json',
+        },
         body: JSON.stringify({ email, password }),
       });
 
       if (response.ok) {
         const data = await response.json();
         localStorage.setItem('token', data.token);
-        setIsAuthenticated(true);
-        return true;
+        setIsLoggedIn(true);
+        navigate('/dashboard', { replace: true });
       } else {
-        console.error('Login failed');
-        setIsAuthenticated(false);
-        return false;
+        const errorData = await response.json();
+        setErrorMessage(errorData.message || 'Login failed. Please try again.');
       }
     } catch (error) {
-      console.error('Network or server error');
-      setIsAuthenticated(false);
-      return false;
+      setErrorMessage('Network error. Please try again later.');
+    } finally {
+      setIsLoading(false);
     }
   };
 
-  const logout = () => {
+  const handleLogout = () => {
     localStorage.removeItem('token');
-    setIsAuthenticated(false);
+    setIsLoggedIn(false);
+    // Include navigation to login page or another appropriate action here
   };
 
   return (
-    <AuthContext.Provider value={{ isAuthenticated, login, logout }}>
+    <AuthContext.Provider value={{ email, setEmail, password, setPassword, errorMessage, handleLogin, isLoading, isLoggedIn, handleLogout }}>
       {children}
     </AuthContext.Provider>
   );
